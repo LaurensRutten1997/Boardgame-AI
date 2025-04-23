@@ -19,7 +19,10 @@ class TicTacToe(Game):
 
     self._grid[self._action_to_row(action)][self._action_to_column(action)] = self._player_turn
 
-    return super().step(action)
+    if not self.terminal:
+      self._next_player_turn()
+
+    return self.game_state, self.reward, self.terminal, False, {}
   
   @property
   def game_state(self):
@@ -30,6 +33,14 @@ class TicTacToe(Game):
           observation[i][j] = 1
         elif self._grid[i][j] != 0:
           observation[i][j] = 2
+
+  @property
+  def reward(self):
+    if not self.terminal:
+      return 0
+    if self.winner == self._player_turn:
+      return 1
+    return -1
 
   @property
   def terminal(self):
@@ -60,11 +71,14 @@ class TicTacToe(Game):
   
   @staticmethod
   def _action_to_column(action):
-    #Convert the action to the corresponding column in the grid
     return action % 3
 
   @staticmethod
   def _action_to_row(action):
-    #Conver the action to the corresponding column in the row
     return floor(action / 3)
   
+  def _next_player_turn(self):
+    if self._player_turn == 1:
+      self._player_turn = 2
+    else:
+      self._player_turn = 1
