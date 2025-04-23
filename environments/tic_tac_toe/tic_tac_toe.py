@@ -16,8 +16,8 @@ class TicTacToe(Game):
   def step(self, action):
     if action not in self._possible_actions(self):
       return self.game_state, -1, True, False, {}
-    
-    
+
+    self._grid[self._action_to_row(action)][self._action_to_column(action)] = self._player_turn
 
     return super().step(action)
   
@@ -30,6 +30,29 @@ class TicTacToe(Game):
           observation[i][j] = 1
         elif self._grid[i][j] != 0:
           observation[i][j] = 2
+
+  @property
+  def terminal(self):
+    if len(self._possible_actions) == 0 or self.winner != 0:
+      return True
+    return False
+  
+  @property
+  def winner(self):
+    for i in range(3):
+      #Check rows
+      if self._grid[i][0] == self._grid[i][1] == self._grid[i][2] != 0:
+        return self._grid[i][0]
+
+      #Check columns
+      if self._grid[0][i] == self._grid[1][i] == self._grid[2][i] != 0:
+        return self._grid[0][i]
+
+    #Check diagonals
+    if self._grid[0][0] == self._grid[1][1] == self._grid[2][2] != 0:
+      return self._grid[0][0]
+
+    return 0
 
   @property
   def _possible_actions(self):
