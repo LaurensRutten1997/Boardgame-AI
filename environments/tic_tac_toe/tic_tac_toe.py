@@ -13,6 +13,11 @@ class TicTacToe(Game):
     self._player_turn = 0
     self._grid = np.zeros((3,3), dtype = np.int64)
 
+  def reset(self):
+    self._player_turn = 1
+    self._grid = np.zeros((3,3), dtype = np.int64)
+    return self.game_state, {}
+
   def step(self, action):
     if action not in self._possible_actions(self):
       return self.game_state, -1, True, False, {}

@@ -4,6 +4,7 @@ The games are all made into a gymnasion environment.
 Each game should have the follwing fuctions or attributes
 
 ## Mandatory Functions:
+- `reset() -> observation, info`: Reset the game to a starting position
 - `step(action) -> observation, reward, terminated, truncated, info`: Update the game with the action of the player
 
 ## Mandatory Attributes:
