@@ -6,10 +6,26 @@ class Game(Env):
     super().__init__()
     self.num_players = 0
     self.player_turn = 0
-    self.possible_actions = []
-    self.game_state = 0
-    self.reward = 0
-    self.terminal = False
+
+  @property
+  def game_state(self):
+    return []
+  
+  @property
+  def game_state_code(self):
+    return ""
+  
+  @property
+  def possible_actions(self):
+    return []
+  
+  @property
+  def reward(self):
+    return 0
+  
+  @property
+  def terminal(self):
+    return False
 
 class PlayRoom(Env):
   def __init__(self, game: Game, opponent: str = 'random'):

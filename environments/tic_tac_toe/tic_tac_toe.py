@@ -39,6 +39,16 @@ class TicTacToe(Game):
           observation[i][j] = 1
         elif self._grid[i][j] != 0:
           observation[i][j] = 2
+    return observation
+  
+  @property
+  def game_state_code(self):
+    game_state = self.game_state
+    code = ""
+    for i in range(3):
+      for j in range(3):
+        code += str(game_state[i][j])
+    return code
   
   @property
   def possible_actions(self):
@@ -77,7 +87,7 @@ class TicTacToe(Game):
 
   @property
   def possible_actions(self):
-    return [action for action in range(self.action_space.n) if (self.grid[self._action_to_row(action)][self._action_to_column(action)] == 0)]
+    return [action for action in range(self.action_space.n) if (self._grid[self._action_to_row(action)][self._action_to_column(action)] == 0)]
   
   @staticmethod
   def _action_to_column(action):
