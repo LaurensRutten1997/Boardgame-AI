@@ -9,12 +9,13 @@ class TicTacToe(Game):
     super().__init__()
     self.action_space = Discrete(n = 9)
     self.observation_space = MultiDiscrete(np.array([[3,3,3],[3,3,3],[3,3,3]]))
-    
-    self._player_turn = 0
+    self.num_players = 2
+    self.player_turn = 0
+
     self._grid = np.zeros((3,3), dtype = np.int64)
 
   def reset(self):
-    self._player_turn = 1
+    self.player_turn = 1
     self._grid = np.zeros((3,3), dtype = np.int64)
     return self.game_state, {}
 
@@ -22,7 +23,7 @@ class TicTacToe(Game):
     if action not in self._possible_actions(self):
       return self.game_state, -1, True, False, {}
 
-    self._grid[self._action_to_row(action)][self._action_to_column(action)] = self._player_turn
+    self._grid[self._action_to_row(action)][self._action_to_column(action)] = self.player_turn
 
     if not self.terminal:
       self._next_player_turn()
@@ -34,16 +35,20 @@ class TicTacToe(Game):
     observation = np.zeros((3,3), dtype = np.int64)
     for i in range(3):
       for j in range(3):
-        if self._grid[i][j] == self._player_turn:
+        if self._grid[i][j] == self.player_turn:
           observation[i][j] = 1
         elif self._grid[i][j] != 0:
           observation[i][j] = 2
-
+  
+  @property
+  def possible_actions(self):
+    return [action for action in range(self.action_space.n) if (self.grid[self._action_to_row(action)][self._action_to_column(action)] == 0)]
+  
   @property
   def reward(self):
     if not self.terminal:
       return 0
-    if self.winner == self._player_turn:
+    if self.winner == self.player_turn:
       return 1
     return -1
 
@@ -71,7 +76,7 @@ class TicTacToe(Game):
     return 0
 
   @property
-  def _possible_actions(self):
+  def possible_actions(self):
     return [action for action in range(self.action_space.n) if (self.grid[self._action_to_row(action)][self._action_to_column(action)] == 0)]
   
   @staticmethod
@@ -83,7 +88,7 @@ class TicTacToe(Game):
     return floor(action / 3)
   
   def _next_player_turn(self):
-    if self._player_turn == 1:
-      self._player_turn = 2
+    if self.player_turn == 1:
+      self.player_turn = 2
     else:
-      self._player_turn = 1
+      self.player_turn = 1
