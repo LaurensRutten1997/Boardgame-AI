@@ -20,7 +20,7 @@ class TicTacToe(Game):
     return self.game_state, {}
 
   def step(self, action):
-    if action not in self._possible_actions(self):
+    if action not in self.possible_actions:
       return self.game_state, -1, True, False, {}
 
     self._grid[self._action_to_row(action)][self._action_to_column(action)] = self.player_turn
@@ -64,7 +64,7 @@ class TicTacToe(Game):
 
   @property
   def terminal(self):
-    if len(self._possible_actions) == 0 or self.winner != 0:
+    if len(self.possible_actions) == 0 or self.winner != 0:
       return True
     return False
   
