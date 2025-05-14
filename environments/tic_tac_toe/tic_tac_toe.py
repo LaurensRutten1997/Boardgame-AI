@@ -20,7 +20,7 @@ class TicTacToe(Game):
     return self.game_state, {}
 
   def step(self, action):
-    if action not in self._possible_actions(self):
+    if action not in self.possible_actions:
       return self.game_state, -1, True, False, {}
 
     self._grid[self._action_to_row(action)][self._action_to_column(action)] = self.player_turn
@@ -39,6 +39,16 @@ class TicTacToe(Game):
           observation[i][j] = 1
         elif self._grid[i][j] != 0:
           observation[i][j] = 2
+    return observation
+  
+  @property
+  def game_state_code(self):
+    game_state = self.game_state
+    code = ""
+    for i in range(3):
+      for j in range(3):
+        code += str(game_state[i][j])
+    return code
   
   @property
   def possible_actions(self):
@@ -54,7 +64,7 @@ class TicTacToe(Game):
 
   @property
   def terminal(self):
-    if len(self._possible_actions) == 0 or self.winner != 0:
+    if len(self.possible_actions) == 0 or self.winner != 0:
       return True
     return False
   
@@ -77,7 +87,7 @@ class TicTacToe(Game):
 
   @property
   def possible_actions(self):
-    return [action for action in range(self.action_space.n) if (self.grid[self._action_to_row(action)][self._action_to_column(action)] == 0)]
+    return [action for action in range(self.action_space.n) if (self._grid[self._action_to_row(action)][self._action_to_column(action)] == 0)]
   
   @staticmethod
   def _action_to_column(action):

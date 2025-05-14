@@ -1,15 +1,31 @@
 from gym import Env
-from random import randint, sample
+from random import choice, randint
 
 class Game(Env):
   def __init__(self):
     super().__init__()
     self.num_players = 0
     self.player_turn = 0
-    self.possible_actions = []
-    self.game_state = 0
-    self.reward = 0
-    self.terminal = False
+
+  @property
+  def game_state(self):
+    return []
+  
+  @property
+  def game_state_code(self):
+    return ""
+  
+  @property
+  def possible_actions(self):
+    return []
+  
+  @property
+  def reward(self):
+    return 0
+  
+  @property
+  def terminal(self):
+    return False
 
 class PlayRoom(Env):
   def __init__(self, game: Game, opponent: str = 'random'):
@@ -22,7 +38,7 @@ class PlayRoom(Env):
   
   def reset(self):
     self.player_turn = randint(1, self.game.num_players)
-    obs = self.game.reset()
+    obs, _ = self.game.reset()
     while self.player_turn != self.game.player_turn:
       obs, _, _, _, _ = self._take_opponent_turn()
     return obs, {}
@@ -44,7 +60,27 @@ class PlayRoom(Env):
     
     return obs, reward, terminated, truncated, info
 
+  @property
+  def game_state(self):
+    return self.game.game_state
+  
+  @property
+  def game_state_code(self):
+    return self.game.game_state_code
+
+  @property
+  def possible_actions(self):
+    return self.game.possible_actions
+  
+  @property
+  def reward(self):
+    return self.game.reward
+  
+  @property
+  def terminal(self):
+    return self.game.terminal
+  
   def _take_opponent_turn(self):
     if self.opponent == 'random':
-      action = sample(self.game.possible_actions)
+      action = choice(self.game.possible_actions)
     return self.game.step(action)
